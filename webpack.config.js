@@ -17,6 +17,10 @@ module.exports = {
             {
                 test: /\.ts$/,
                 loader: "ts-loader"
+            },
+            {
+                test: /\.js$/,
+                include: ['node_modules/reflect-metadata/Reflect.js', 'node_modules/zone.js/dist/zone.min.js']
             }
         ]
     },
