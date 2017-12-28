@@ -22,9 +22,14 @@ module.exports = {
     },
     plugins: [
         new webpack.ContextReplacementPlugin(
-            /@angular/,
-            path.join(__dirname, 'src')
-        )
+            /\@angular(\\|\/)core(\\|\/)esm5/,
+            path.join(__dirname, './src')
+        ),
+        new webpack.optimize.UglifyJsPlugin({
+            mangle: {
+                keep_fnames: true
+            }
+        })
     ],
     watchOptions: {
         ignored: /node_modules/
