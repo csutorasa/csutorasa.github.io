@@ -4,4 +4,4 @@ git checkout master && \
 git add . && \
 git commit -m "Release from develop" && \
 git push && \
-git checkout develop
+git checkout develop &
