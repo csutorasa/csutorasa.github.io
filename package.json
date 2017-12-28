@@ -1,0 +1,19 @@
+{
+  "name": "csutorasa.github.io",
+  "version": "1.0.0",
+  "description": "Available online at: https://csutorasa.github.io/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/csutorasa/csutorasa.github.io.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/csutorasa/csutorasa.github.io/issues"
+  },
+  "homepage": "https://github.com/csutorasa/csutorasa.github.io#readme"
+}
