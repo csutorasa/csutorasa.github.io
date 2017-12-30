@@ -8,6 +8,8 @@ import { RouterModule } from '@angular/router';
 import { routerConfig } from './router';
 import { MainComponent } from './MainComponent';
 
+import { HelloWorldComponent } from './HelloWorldComponent';
+
 import 'reflect-metadata/Reflect.js';
 import 'zone.js/dist/zone.min.js';
 import 'zone.js/dist/long-stack-trace-zone.min.js';
@@ -22,7 +24,8 @@ const debug = true;
 		RouterModule.forRoot(routerConfig)
 	],
 	declarations: [
-        MainComponent
+		MainComponent,
+		HelloWorldComponent
     ],
 	providers: [
 		{ provide: LocationStrategy, useClass: HashLocationStrategy }
