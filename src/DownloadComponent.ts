@@ -20,10 +20,10 @@ export class DownloadComponent {
 						return assets.map(asset => asset.download_count)
 							.reduce((prev, curr, index, array) => {
 								return prev + curr;
-							});
+							}, 0);
 					}).reduce((prev, curr, index, array) => {
 						return prev + curr;
-					});
+					}, 0);
 					console.log(fullName, donwloadCount);
 				}));
 			});
