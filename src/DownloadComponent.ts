@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 
 @Component({
 	selector: 'download',
-	template: `<div ngFor="let repo of downloadData">
+	template: `<div *ngFor="let repo of downloadData">
 	<h1>{{repo.name}}</h1>
 	<span>{{repo.download}}</span>
 </div>`,
