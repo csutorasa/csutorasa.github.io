@@ -1,2 +1,6 @@
+# dependency manager
 node_modules
+# distribution
 dist
+# move between branches
+move

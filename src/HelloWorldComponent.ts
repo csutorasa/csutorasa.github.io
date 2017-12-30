@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'my-app',
+	selector: 'hello-world',
 	template: `Hello World!`,
 })
-export class MainComponent {
+export class HelloWorldComponent {
 	constructor() {
 		
 	}
