@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
 	selector: 'hello-world',
-	template: `<router-outlet></router-outlet>`,
+	template: `Hello World!`,
 })
 export class HelloWorldComponent {
 	constructor() {
