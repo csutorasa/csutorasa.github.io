@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { routerConfig } from './router';
 import { MainComponent } from './MainComponent';
@@ -19,7 +19,7 @@ const debug = true;
 @NgModule({
 	imports: [
 		BrowserModule,
-		HttpModule,
+		HttpClientModule,
 		FormsModule,
 		RouterModule.forRoot(routerConfig)
 	],

@@ -5,7 +5,9 @@
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "lib": ["es5", "es6", "dom"],
-        "baseUrl": "."
-    }
+        "lib": ["es5", "es6", "dom"]
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
