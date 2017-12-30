@@ -9,6 +9,7 @@ import { routerConfig } from './router';
 import { MainComponent } from './MainComponent';
 
 import { HelloWorldComponent } from './HelloWorldComponent';
+import { DownloadComponent } from './DownloadComponent';
 
 import 'reflect-metadata/Reflect.js';
 import 'zone.js/dist/zone.min.js';
@@ -25,7 +26,8 @@ const debug = true;
 	],
 	declarations: [
 		MainComponent,
-		HelloWorldComponent
+		HelloWorldComponent,
+		DownloadComponent
     ],
 	providers: [
 		{ provide: LocationStrategy, useClass: HashLocationStrategy }

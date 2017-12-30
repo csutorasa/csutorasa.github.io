@@ -1,5 +1,4 @@
-import { Component, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Component } from '@angular/core';
 
 @Component({
 	selector: 'my-app',
