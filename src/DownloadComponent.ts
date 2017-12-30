@@ -12,7 +12,7 @@ import { Observable } from 'rxjs/Rx';
 export class DownloadComponent {
 
 	private readonly username: string = 'csutorasa';
-	protected readonly downloadData: { name: string, donwload: number }[] = [];
+	protected readonly downloadData: { name: string, download: number }[] = [];
 
 	constructor( @Inject(HttpClient) protected httpClient: HttpClient) {
 		httpClient.get('https://api.github.com/users/' + this.username + '/repos').toPromise().then((repos: any[]) => {
@@ -21,7 +21,7 @@ export class DownloadComponent {
 				const name: string = repo.name;
 				promises.push(httpClient.get('https://api.github.com/repos/' + this.username + '/' + name + '/releases').toPromise().then((releases: any[]) => {
 					const donwloadCount = this.calculateDownloadCount(releases);
-					this.downloadData.push({ name: name, donwload: donwloadCount });
+					this.downloadData.push({ name: name, download: donwloadCount });
 				}));
 			});
 			return Promise.all(promises);
