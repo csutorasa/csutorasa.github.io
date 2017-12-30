@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
 
@@ -7,8 +7,8 @@ import { Observable } from 'rxjs/Rx';
 	template: `<router-outlet></router-outlet>`,
 })
 export class MainComponent {
-	constructor(protected http: HttpClient) {
-		http.get('https://api.github.com/repos/csutorasa/XOutput/releases').toPromise().then(data => {
+	constructor(@Inject(HttpClient) protected httpClient: HttpClient) {
+		httpClient.get('https://api.github.com/repos/csutorasa/XOutput/releases').toPromise().then(data => {
 			console.log(data);
 		}, err =>{
 			console.error(err);
