@@ -46,7 +46,7 @@ export class DownloadComponent {
 	}
 
 	protected getReleases(username: string, repository: string): Promise<any[]> {
-		return this.httpClient.get('https://api.github.com/repos/' + username + '/' + name + '/releases').toPromise().then(r => <any[]>r);
+		return this.httpClient.get('https://api.github.com/repos/' + username + '/' + repository + '/releases').toPromise().then(r => <any[]>r);
 	}
 
 	protected calculateDownloadCount(releases: any[]): number {
