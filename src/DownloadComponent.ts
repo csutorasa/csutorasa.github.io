@@ -11,7 +11,7 @@ import { Observable } from 'rxjs/Rx';
 	</tr>
 	<tr *ngFor="let repo of downloadData">
 		<td>{{repo.name}}</td>
-		<td>{{repo.download}}</td>
+		<td>{{repo.download < 0 ? 'Failed to get' : repo.download}}</td>
 	</tr>
 </table>`,
 })
@@ -28,20 +28,24 @@ export class DownloadComponent {
 	}
 
 	protected getDownloadData(username: string): Promise<{ name: string, download: number }[]> {
-		return this.getRepositories(username).then((repos: any[]) => {
-			const promises: Promise<{ name: string, download: number }>[] = repos.map(repo => {
-				const name: string = repo.name;
+		return this.getRepositoryNames(username).then((repoNames: string[]) => {
+			const promises: Promise<{ name: string, download: number }>[] = repoNames.map(name => {
 				return this.getReleases(username, name).then((releases: any[]) => {
 					const donwloadCount = this.calculateDownloadCount(releases);
 					return { name: name, download: donwloadCount };
+				}).catch(err => {
+					console.error(err);
+					return { name: name, download: -1 };
 				});
 			});
 			return Promise.all(promises);
 		});
 	}
 
-	protected getRepositories(username: string): Promise<any[]> {
-		return this.httpClient.get('https://api.github.com/users/' + username + '/repos').toPromise().then(r => <any[]>r);
+	protected getRepositoryNames(username: string): Promise<string[]> {
+		return this.httpClient.get('https://api.github.com/search/repositories?q=user:' + username).toPromise()
+			.then(r => (<any[]>(<any>r).items))
+			.then(r => r.map(r => r.name));
 
 	}
 
