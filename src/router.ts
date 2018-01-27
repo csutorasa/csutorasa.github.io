@@ -11,5 +11,9 @@ export const routerConfig: Routes = [
     {
         path: 'download',
         component: DownloadComponent
+    },
+    {
+        path: 'timer',
+        component: TimerComponent
     }
 ];
