@@ -10,6 +10,7 @@ import { MainComponent } from './MainComponent';
 
 import { HelloWorldComponent } from './HelloWorldComponent';
 import { DownloadComponent } from './DownloadComponent';
+import { TimerComponent } from './TimerComponent';
 
 import 'reflect-metadata/Reflect.js';
 import 'zone.js/dist/zone.min.js';
@@ -27,7 +28,8 @@ const debug = true;
 	declarations: [
 		MainComponent,
 		HelloWorldComponent,
-		DownloadComponent
+		DownloadComponent,
+		TimerComponent
     ],
 	providers: [
 		{ provide: LocationStrategy, useClass: HashLocationStrategy }
