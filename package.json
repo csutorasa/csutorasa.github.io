@@ -4,10 +4,14 @@
   "description": "Available online at: https://csutorasa.github.io/",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm run buildjs",
+    "postinstall": "concurrently --prefix \"[{name}]\" --names \"Webpack,SCSS\" \"npm run buildjs\" \"npm run buildcss\"",
+    "watch": "concurrently --prefix \"[{name}]\" --names \"Webpack,SCSS\" \"npm run watchjs\" \"npm run watchcss\"",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "demo": " http-server ./",
     "buildjs": "webpack --config webpack.config.js",
-    "watchjs": "webpack --config webpack.config.js --watch"
+    "watchjs": "webpack --config webpack.config.js --watch",
+    "buildcss": "node-sass --output-style compressed src/index.scss dist/index.css",
+    "watchcss": "node-sass --watch --output-style compressed src/index.scss dist/index.css"
   },
   "repository": {
     "type": "git",
@@ -20,19 +24,23 @@
   },
   "homepage": "https://github.com/csutorasa/csutorasa.github.io#readme",
   "dependencies": {
-    "@angular/common": "^5.2.2",
-    "@angular/compiler": "^5.2.2",
-    "@angular/core": "^5.2.2",
-    "@angular/forms": "^5.2.2",
-    "@angular/platform-browser": "^5.2.2",
-    "@angular/platform-browser-dynamic": "^5.2.2",
-    "@angular/router": "^5.2.2",
+    "@angular/common": "^5.2.4",
+    "@angular/compiler": "^5.2.4",
+    "@angular/core": "^5.2.4",
+    "@angular/forms": "^5.2.4",
+    "@angular/platform-browser": "^5.2.4",
+    "@angular/platform-browser-dynamic": "^5.2.4",
+    "@angular/router": "^5.2.4",
     "node-sass": "^4.7.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
-    "ts-loader": "^3.3.1",
-    "typescript": "^2.6.2",
+    "ts-loader": "^3.4.0",
+    "typescript": "^2.7.1",
     "webpack": "^3.10.0",
     "zone.js": "^0.8.20"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "http-server": "^0.11.1"
   }
 }
