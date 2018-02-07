@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { HelloWorldComponent } from './HelloWorldComponent';
 import { DownloadComponent } from './DownloadComponent';
-import { TimerComponent } from './TimerComponent';
+import { TimerComponent } from './timer/TimerComponent';
 
 export const routerConfig: Routes = [
     {

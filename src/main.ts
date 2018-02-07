@@ -5,12 +5,13 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { routerConfig } from './router';
+
+import { routerConfig } from './Router';
 import { MainComponent } from './MainComponent';
 
 import { HelloWorldComponent } from './HelloWorldComponent';
 import { DownloadComponent } from './DownloadComponent';
-import { TimerComponent } from './TimerComponent';
+import { TimerComponent } from './timer/TimerComponent';
 
 import 'reflect-metadata/Reflect.js';
 import 'zone.js/dist/zone.min.js';
