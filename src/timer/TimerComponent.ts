@@ -6,14 +6,14 @@ import { Task, Interval } from './Task';
 	template: `<div>
 	<div class="title">Search</div>
 	<div><input type="text" [(ngModel)]="searchText"/></div>
-	<button (click)="addNew()">Add</button>
-	<button *ngIf="currentInterval" (click)="finish()">Finish</button>
+	<button (click)="addNew()">Add <icon type="plus"></icon></button>
+	<button *ngIf="currentInterval" (click)="finish()">Stop <icon type="pause"></icon></button>
 	<div>Total duration: {{ totalDurationString }}<div>
 	<div *ngFor="let task of tasks">
 		<div *ngIf="matchesFilter(task)" class="task" [ngClass]="{active: task.intervals.indexOf(currentInterval) >= 0}">
 			<div class="title" *ngIf="!task.editTitle" (click)="startEditTitle(task)">{{task.title}}</div>
 			<div class="title" *ngIf="task.editTitle"><input type="text" [(ngModel)]="task.title"
-				(blur)="finishEditTitle(task)" (keyup)="finishKeyListener($event, task)" (load)="asd($event)" #editField/></div>
+				(blur)="finishEditTitle(task)" (keyup)="finishKeyListener($event, task)" #editField/></div>
 			<div>
 				<div *ngIf="task.durationString" (click)="toggleDetails(task)">Duration: {{ task.durationString }}</div>
 			</div>
@@ -25,7 +25,7 @@ import { Task, Interval } from './Task';
 				</div>
 			</div>
 			<div *ngIf="task.intervals.indexOf(currentInterval) < 0">
-				<button (click)="extend(task)">Continue</button>
+				<button (click)="extend(task)">Continue <icon type="play"></icon></button>
 			</div>
 		</div>
 	</div>
@@ -39,9 +39,11 @@ export class TimerComponent {
 	protected searchText: string = '';
 	protected currentTask: Task;
 	protected currentInterval: Interval;
-	protected totalDurationString: string = this.getDurationString(0);
+	protected totalDurationString: string;
 
 	constructor() {
+		this.load();
+		this.refreshDuration(this.currentTask != null);
 		setInterval(() => {
 			this.refreshDuration(true);
 		}, 1000);
@@ -59,17 +61,20 @@ export class TimerComponent {
 		};
 		this.tasks.push(task);
 		this.open(task);
+		this.save();
 	}
 
 	public extend(task: Task) {
 		this.close();
 		this.open(task);
+		this.save();
 	}
 
 	public finish(): void {
 		this.close();
 		this.currentTask = undefined;
 		this.currentInterval = undefined;
+		this.save();
 	}
 
 	public toggleDetails(task: Task): void {
@@ -82,7 +87,7 @@ export class TimerComponent {
 	}
 
 	public finishKeyListener(event: KeyboardEvent, task: Task) {
-		if(event.keyCode == 13) {
+		if (event.keyCode == 13) {
 			this.finishEditTitle(task);
 		}
 	}
@@ -95,8 +100,34 @@ export class TimerComponent {
 		return task.title.toLowerCase().indexOf(this.searchText.toLowerCase()) >= 0;
 	}
 
-	public asd(event) {
-		console.log(event);
+	protected save(): void {
+		localStorage.setItem('tasks', JSON.stringify(this.tasks));
+		localStorage.setItem('currenttask', this.tasks.indexOf(this.currentTask).toString());
+		localStorage.setItem('currentinterval', this.currentTask ? this.currentTask.intervals.indexOf(this.currentInterval).toString() : '-1');
+	}
+
+	protected load(): void {
+		this.tasks.length = 0;
+		try {
+			const tasks: Task[] = <Task[]>JSON.parse(localStorage.getItem('tasks'));
+			tasks.forEach(t => t.intervals.forEach(i => {
+				i.startTime = new Date(<any>i.startTime);
+				if (i.endTime) {
+					i.endTime = new Date(<any>i.endTime);
+				}
+			}));
+			this.tasks.push(...tasks);
+			const taskIndex: number = parseInt(localStorage.getItem('currenttask'));
+			if (taskIndex >= 0) {
+				this.currentTask = this.tasks[taskIndex];
+				const intervalIndex: number = parseInt(localStorage.getItem('currentinterval'));
+				if (intervalIndex >= 0) {
+					this.currentInterval = this.currentTask.intervals[intervalIndex];
+				}
+			}
+		} catch (e) {
+			console.warn(e);
+		}
 	}
 
 	protected open(task: Task): void {
@@ -123,29 +154,28 @@ export class TimerComponent {
 	}
 
 	protected refreshDuration(onGoing: boolean): void {
-		if(!this.currentInterval) {
-			return;
+		let taskDuration: number = 0;
+		if (this.currentInterval) {
+			if (onGoing) {
+				const currentIntervalDuration = new Date().getTime() - this.currentInterval.startTime.getTime();
+				this.currentInterval.durationString = this.getDurationString(currentIntervalDuration);
+				taskDuration = this.currentTask.intervals.filter(i => i.duration).reduce((sum, i) => sum + i.duration, 0) + currentIntervalDuration;
+				this.currentTask.durationString = this.getDurationString(taskDuration);
+			} else {
+				const currentIntervalDuration = this.currentInterval.endTime.getTime() - this.currentInterval.startTime.getTime();
+				this.currentInterval.durationString = this.getDurationString(currentIntervalDuration);
+				taskDuration = this.currentTask.intervals.reduce((sum, i) => sum + i.duration, 0);
+				this.currentTask.durationString = this.getDurationString(taskDuration);
+			}
 		}
-		let taskDuration: number;
-		if(onGoing) {
-			const currentIntervalDuration = new Date().getTime() - this.currentInterval.startTime.getTime();
-			this.currentInterval.durationString = this.getDurationString(currentIntervalDuration);
-			taskDuration = this.currentTask.intervals.filter(i => i.duration).reduce((sum, i) => sum + i.duration, 0) + currentIntervalDuration;
-			this.currentTask.durationString = this.getDurationString(taskDuration);
-		} else {
-			const currentIntervalDuration = this.currentInterval.endTime.getTime() - this.currentInterval.startTime.getTime();
-			this.currentInterval.durationString = this.getDurationString(currentIntervalDuration);
-			taskDuration = this.currentTask.intervals.reduce((sum, i) => sum + i.duration, 0);
-			this.currentTask.durationString = this.getDurationString(taskDuration);
-		}
-		const totalDuration = this.tasks.filter(t => t!==this.currentTask).reduce((sum, i) => sum + i.duration, 0) + taskDuration;
+		const totalDuration = this.tasks.filter(t => t !== this.currentTask).reduce((sum, i) => sum + i.duration, 0) + taskDuration;
 		this.totalDurationString = this.getDurationString(totalDuration);
 	}
 
 	protected dateToString(date: Date): string {
 		return date.toISOString().replace('T', ' ').replace('Z', '').substr(0, 16);
 	}
-	
+
 	protected getDurationString(duration: number): string {
 		const hours = Math.floor(duration / (60 * 60 * 1000));
 		duration = duration % (60 * 60 * 1000);
@@ -154,7 +184,7 @@ export class TimerComponent {
 		duration = duration % (60 * 1000);
 
 		const seconds = Math.floor(duration / 1000);
-		
+
 		return hours + 'h ' + minutes + 'm ' + seconds + 's';
 	}
 }

@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { HelloWorldComponent } from './HelloWorldComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { TimerComponent } from './timer/TimerComponent';
+import { SudokuComponent } from './SudokuComponent';
 
 export const routerConfig: Routes = [
     {
@@ -16,5 +17,9 @@ export const routerConfig: Routes = [
     {
         path: 'timer',
         component: TimerComponent
-    }
+    },
+    {
+        path: 'sudoku',
+        component: SudokuComponent
+    },
 ];

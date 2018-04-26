@@ -9,9 +9,12 @@ import { RouterModule } from '@angular/router';
 import { routerConfig } from './Router';
 import { MainComponent } from './MainComponent';
 
+import { IconComponent } from './fontawesome/Icon';
+
 import { HelloWorldComponent } from './HelloWorldComponent';
 import { DownloadComponent } from './DownloadComponent';
 import { TimerComponent } from './timer/TimerComponent';
+import { SudokuComponent } from './SudokuComponent';
 
 import 'reflect-metadata/Reflect.js';
 import 'zone.js/dist/zone.min.js';
@@ -28,9 +31,11 @@ const debug = true;
 	],
 	declarations: [
 		MainComponent,
+		IconComponent,
 		HelloWorldComponent,
 		DownloadComponent,
-		TimerComponent
+		TimerComponent,
+		SudokuComponent,
     ],
 	providers: [
 		{ provide: LocationStrategy, useClass: HashLocationStrategy }

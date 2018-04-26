@@ -4,6 +4,7 @@
   "description": "Available online at: https://csutorasa.github.io/",
   "main": "index.js",
   "scripts": {
+    "start": "http-server .",
     "postinstall": "concurrently --prefix \"[{name}]\" --names \"Webpack,SCSS\" \"npm run buildjs\" \"npm run buildcss\"",
     "watch": "concurrently --prefix \"[{name}]\" --names \"Webpack,SCSS\" \"npm run watchjs\" \"npm run watchcss\"",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -31,6 +32,7 @@
     "@angular/platform-browser": "^5.2.4",
     "@angular/platform-browser-dynamic": "^5.2.4",
     "@angular/router": "^5.2.4",
+    "font-awesome": "^4.7.0",
     "node-sass": "^4.7.2",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
