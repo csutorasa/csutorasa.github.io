@@ -1,4 +1,10 @@
 # dependency manager
 node_modules
+
+# source
+src/
+*.json
+*.js
+
 # move between branches
 move
