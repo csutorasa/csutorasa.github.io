@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
+    mode: 'production',
     entry: {
         'index': path.join(__dirname, 'src', 'main.ts')
     },
@@ -13,7 +15,7 @@ module.exports = {
         extensions: ['.ts', '.js']
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 loader: "ts-loader"
@@ -25,10 +27,15 @@ module.exports = {
             /\@angular(\\|\/)core(\\|\/)esm5/,
             path.join(__dirname, './src')
         ),
-        new webpack.optimize.UglifyJsPlugin({
-            mangle: {
-                keep_fnames: true
-            }
+        new UglifyJsPlugin({
+            cache: true,
+            parallel: true,
+            uglifyOptions: {
+                compress: false,
+                ecma: 6,
+                mangle: true
+            },
+            sourceMap: true
         })
     ],
     watchOptions: {
