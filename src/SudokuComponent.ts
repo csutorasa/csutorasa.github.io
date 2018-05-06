@@ -6,43 +6,12 @@ interface Cell {
 	x: number;
 	y: number;
 	value?: number;
-	possibleValues: number[];
+	possibleValues: Set<number>;
 	blocks: Block[];
 }
 
 interface Block {
 	cells: Cell[];
-}
-
-function permuteArray(array: any[], size: number, indices: number[] = []): any[][] {
-	const result: any[][] = [];
-	const newIndices: any[][] = [];
-
-	for (let i = 0; i < array.length; i++) {
-		if(indices.indexOf(i) < 0) {
-			for (let j = 0; j < indices.length; j++) {
-				const newI = indices.slice();
-				newI.splice(j, 0, i);
-				newIndices.push(newI);
-				result.push(indices.map(index => array[index]));
-			}
-			const newI = indices.slice();
-			newI.push(i);
-			newIndices.push(newI);
-			result.push(indices.map(index => array[index]));
-		}
-	}
-
-	if(indices.length < size) {
-		const r: any[][] = [];
-		for(let i = 0; i < newIndices.length; i++) {
-			console.log(newIndices[i]);
-			r.push(...permuteArray(array, size, newIndices[i]));
-		}
-		return r;
-	}
-	console.log(result);
-	return result;
 }
 
 @Component({
@@ -82,10 +51,10 @@ export class SudokuComponent {
 		cell.blocks.push(block);
 	}
 
-	protected createValuesSequence(): number[] {
-		const sequence = [];
+	protected createValuesSequence(): Set<number> {
+		const sequence = new Set();
 		for (let i = 1; i <= this.size; i++) {
-			sequence.push(i);
+			sequence.add(i);
 		}
 		return sequence;
 	}
@@ -110,11 +79,13 @@ export class SudokuComponent {
 		for (let i = 0; i < this.size; i++) {
 			this.cells[i] = [];
 			for (let j = 0; j < this.size; j++) {
+				const possibleValues = this.createValuesSequence();
+				possibleValues.delete(values[i][j]);
 				this.cells[i][j] = {
 					x: i,
 					y: j,
 					value: values[i][j] == 0 ? undefined : values[i][j],
-					possibleValues: this.createValuesSequence().filter(v => v != values[i][j]),
+					possibleValues: possibleValues,
 					blocks: [],
 				};
 			}
@@ -145,12 +116,12 @@ export class SudokuComponent {
 
 	public solve(): boolean {
 		let processed = 1;
-		console.log(this.generateSubsets(this.createValuesSequence(), 3));
-		while (processed > 0) {
+		for (let i = 0; i < 10 && processed > 0; i++) {
 			processed = 0;
 			for (let block of this.blocks) {
 				processed += this.filterValueAlreadyExistsInBlock(block);
 				processed += this.setValueOnlyOnePossibilityinBlock(block);
+				processed += this.nextGen(block);
 			}
 		}
 
@@ -171,13 +142,8 @@ export class SudokuComponent {
 	public filterValueAlreadyExistsInBlock(block: Block): number {
 		const filterValues: number[] = block.cells.filter(c => c.value != null).map(c => c.value);
 		return block.cells.filter(c => c.value == null).map(cell => {
-			cell.possibleValues = cell.possibleValues.filter(v => filterValues.indexOf(v) < 0);
-			if (cell.possibleValues.length == 1) {
-				cell.value = cell.possibleValues[0];
-				return <number>1;
-			}
-			return 0;
-		}).reduce((a, b) => a + b, 0);
+			return this.removePossibleValues(cell, ...filterValues);
+		}).reduce((a, b) => a + (b ? 1 : 0), 0);
 	}
 
 	/**
@@ -186,7 +152,7 @@ export class SudokuComponent {
 	 * @returns number of changed cells
 	 */
 	public setValueOnlyOnePossibilityinBlock(block: Block): number {
-		return this.createValuesSequence().map(value => {
+		return Array.from(this.createValuesSequence()).map(value => {
 			const possibleCells: Cell[] = [];
 			let containsAlready = false;
 			for (let cell of block.cells) {
@@ -194,24 +160,66 @@ export class SudokuComponent {
 					containsAlready = true;
 					break;
 				}
-				if (cell.possibleValues.indexOf(value) >= 0) {
+				if (cell.possibleValues.has(value)) {
 					possibleCells.push(cell);
 				}
 			}
-			if (!containsAlready && possibleCells.length == 1) {
+			if (!containsAlready && possibleCells.length === 1) {
 				const possibleCell = possibleCells[0];
-				possibleCell.value = value;
-				return <number>1;
+				const valuesToRemove = Array.from(possibleCell.possibleValues).filter(v => v !== value);
+				return this.removePossibleValues(possibleCell, ...valuesToRemove);
 			}
-			return 0;
+			return false;
+		}).reduce((a, b) => a + (b ? 1 : 0), 0);
+	}
+
+	public nextGen(block: Block): number {
+		const emptyCells: Cell[] = block.cells.filter(c => c.value == null);
+		return emptyCells.map((blockEmpty, i) => {
+			const include = emptyCells.filter((c, index) => i !== index);
+			const exclude = emptyCells.filter((c, index) => i === index);
+			return this.nextGenLogic(include, exclude);
 		}).reduce((a, b) => a + b, 0);
 	}
 
-	public nextGen(block: Block) {
-
+	protected nextGenLogic(include: Cell[], exclude: Cell[]): number {
+		const values = [];
+		include.forEach(cell => {
+			cell.possibleValues.forEach(value => {
+				if (values.indexOf(value) < 0) {
+					values.push(value);
+				}
+			});
+		});
+		if (values.length === include.length) {
+			return exclude.map(c => {
+				return this.removePossibleValues(c, ...values);
+			}).reduce((a, b) => a + (b ? 1 : 0), 0);
+		}
 	}
 
-	protected generateSubsets(data: any[], size: number) {
-		return permuteArray(data, size).filter(x => x.length == size);
+	protected removePossibleValues(cell: Cell, ...removeValues: number[]): boolean {
+		if (cell.value != null) {
+			return false;
+		}
+		const changed = removeValues.map(v => cell.possibleValues.delete(v)).reduce((a, b) => a + (b ? 1 : 0), 0);
+		if (changed > 0) {
+			if (cell.value == null && cell.possibleValues.size === 1) {
+				cell.value = Array.from(cell.possibleValues)[0];
+				console.log('Value set', cell);
+				cell.blocks.forEach(b => {
+					b.cells
+						.filter(c => c.value == null)
+						.filter(c => c.possibleValues.has(cell.value))
+						.forEach(c => {
+							this.removePossibleValues(c, cell.value)
+						});
+				})
+				return true;
+			} else {
+				console.log('Possible values changed', cell);
+			}
+		}
+		return false;
 	}
 }
