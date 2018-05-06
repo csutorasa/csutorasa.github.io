@@ -2,7 +2,7 @@
 node_modules
 
 # source
-src/
+src/**
 *.json
 *.js
 
