@@ -175,26 +175,30 @@ export class SudokuComponent {
 
 	public nextGen(block: Block): number {
 		const emptyCells: Cell[] = block.cells.filter(c => c.value == null);
+		const possibleValues: Set<number> = new Set(block.cells.filter(c => c.value != null).map(c => c.value));
 		return emptyCells.map((blockEmpty, i) => {
 			const include = emptyCells.filter((c, index) => i !== index);
 			const exclude = emptyCells.filter((c, index) => i === index);
-			return this.nextGenLogic(include, exclude);
+			return this.nextGenLogic(include, exclude, possibleValues);
 		}).reduce((a, b) => a + b, 0);
 	}
 
-	protected nextGenLogic(include: Cell[], exclude: Cell[]): number {
-		const values = [];
+	protected nextGenLogic(include: Cell[], exclude: Cell[], possibleValues: Set<number>): number {
+		const valuesToRemoveFromExclude = new Set<number>();
 		include.forEach(cell => {
 			cell.possibleValues.forEach(value => {
-				if (values.indexOf(value) < 0) {
-					values.push(value);
-				}
+				valuesToRemoveFromExclude.add(value);
 			});
 		});
-		if (values.length === include.length) {
-			return exclude.map(c => {
-				return this.removePossibleValues(c, ...values);
+		const valuesToRemoveFromInclude = Array.from(possibleValues).filter(v => !valuesToRemoveFromExclude.has(v));
+		if (valuesToRemoveFromExclude.size === include.length) {
+			const excluded = exclude.map(c => {
+				return this.removePossibleValues(c, ...Array.from(valuesToRemoveFromExclude));
 			}).reduce((a, b) => a + (b ? 1 : 0), 0);
+			const included = include.map(c => {
+				return this.removePossibleValues(c, ...valuesToRemoveFromInclude);
+			}).reduce((a, b) => a + (b ? 1 : 0), 0);
+			return included + excluded;
 		}
 	}
 
