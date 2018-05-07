@@ -47,12 +47,16 @@ export class DownloadComponent implements OnInit {
         this.route.params.subscribe(params => {
             if (params['user']) {
                 this.searchForm.username = params['user'];
-                const discover = this.discover();
+                const discover = this.discover().then(() => {
+                    this.location.replaceState('/download/' + this.searchForm.username);
+                });
                 const repo = params['repo'];
                 if (repo) {
                     discover.then(() => {
                         if (this.repositories.map(r => r.name).indexOf(repo) >= 0) {
-                            this.setRepositoryName(repo);
+                            this.setRepositoryName(repo).then(() => {
+                                this.location.replaceState('/download/' + this.searchForm.username + '/' + repo);
+                            });
                         }
                     });
                 }
@@ -64,28 +68,36 @@ export class DownloadComponent implements OnInit {
     }
 
     public reset(): void {
+        this.repository = undefined;
         this.repositories.length = 0;
         this.downloadData = undefined;
         this.location.go('/download');
     }
 
-    public setRepositoryName(repoName: string): Promise<void> {
-        this.repository = repoName;
-        return this.getDownloadData(this.searchForm.username, this.repositories.find(r => r.name === repoName)).then(data => {
-            this.downloadData = data;
+    public selectRepository(repoName: string): Promise<void> {
+        return this.setRepositoryName(repoName).then(data => {
             this.location.go('/download/' + this.searchForm.username + '/' + repoName);
         });
     }
 
-    public discover(): Promise<void> {
-        if (!this.searchForm.username) {
-            return Promise.resolve();
-        }
+    protected setRepositoryName(repoName: string): Promise<void> {
+        this.repository = repoName;
+        return this.getDownloadData(this.searchForm.username, this.repositories.find(r => r.name === repoName)).then(data => {
+            this.downloadData = data;
+        });
+    }
+
+    public findRepositories(): Promise<void> {
+        return this.discover().then(() => {
+            this.location.go('/download/' + this.searchForm.username);
+        });
+    }
+
+    protected discover(): Promise<void> {
         return this.getRepositoryNames(this.searchForm.username).then((repos: RepositoryData[]) => {
             this.repositories.length = 0;
             this.notfound = false;
             this.repositories.push(...repos.sort((a, b) => a.name.localeCompare(b.name)));
-            this.location.go('/download/' + this.searchForm.username);
         }, err => {
             this.repositories.length = 0;
             this.downloadData = undefined;
@@ -176,5 +188,4 @@ export class DownloadComponent implements OnInit {
                 return releases;
             });
     }
-
 }

@@ -1,12 +1,12 @@
 <form class="searchform">
     Username:
     <input [(ngModel)]="searchForm.username" (ngModelChange)="reset()" name="username" type="text" />
-    <button (click)="discover()" [disabled]="!searchForm.username">Discover</button>
+    <button (click)="findRepositories()" [disabled]="!searchForm.username">Discover</button>
 </form>
 <div class="repositories">
-    <div *ngFor="let repo of repositories" (click)="setRepositoryName(repo.name)" class="repository" [ngClass]="{selected: repo.name === repository}">
+    <span *ngFor="let repo of repositories" (click)="selectRepository(repo.name)" class="repository" [ngClass]="{selected: repo.name === repository}">
         {{repo.name}}
-    </div>
+    </span>
 </div>
 <div *ngIf="notfound" class="error">
     User cannot be found!
