@@ -1,61 +1,12 @@
-import { Component, NgModule, enableProdMode } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 
-import { routerConfig } from './Router';
-import { MainComponent } from './MainComponent';
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
 
-import { IconComponent } from './fontawesome/Icon';
-
-import { HelloWorldComponent } from './HelloWorldComponent';
-import { DownloadComponent } from './DownloadComponent';
-import { TimerComponent } from './timer/TimerComponent';
-import { SudokuComponent } from './SudokuComponent';
-
-import 'reflect-metadata/Reflect.js';
-import 'zone.js/dist/zone.min.js';
-import 'zone.js/dist/long-stack-trace-zone.min.js';
-
-const debug = true;
-
-@NgModule({
-	imports: [
-		BrowserModule,
-		HttpClientModule,
-		FormsModule,
-		RouterModule.forRoot(routerConfig)
-	],
-	declarations: [
-		MainComponent,
-		IconComponent,
-		HelloWorldComponent,
-		DownloadComponent,
-		TimerComponent,
-		SudokuComponent,
-    ],
-	providers: [
-		{ provide: LocationStrategy, useClass: HashLocationStrategy }
-	],
-	bootstrap: [MainComponent]
-})
-export class MainModule { }
-
-window.onload = () => {
-	if (debug) {
-		console.debug('Bootstrapping...');
-	} else {
-		enableProdMode();
-	}
-	const bootstappingStart = new Date();
-	platformBrowserDynamic().bootstrapModule(MainModule).then(() => {
-		if (debug) {
-			console.debug('Bootstrapped successfully in ' + (new Date().getTime() - bootstappingStart.getTime()) + 'ms');
-		}
-	}, err => {
-		console.error(err);
-	});
+if (environment.production) {
+  enableProdMode();
 }
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.log(err));

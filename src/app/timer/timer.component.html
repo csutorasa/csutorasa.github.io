@@ -1,0 +1,36 @@
+<div class="timer">
+    <div class="title">Search</div>
+    <div>
+        <input type="text" [(ngModel)]="searchText" />
+    </div>
+    <button (click)="addNew()">Add
+        <app-icon type="plus"></app-icon>
+    </button>
+    <button *ngIf="currentInterval" (click)="finish()">Stop
+        <app-icon type="pause"></app-icon>
+    </button>
+    <div>Total duration: {{ totalDurationString }}</div>
+    <div *ngFor="let task of tasks">
+        <div *ngIf="matchesFilter(task)" class="task" [ngClass]="{active: task.intervals.indexOf(currentInterval) >= 0}">
+            <div class="title" *ngIf="!task.editTitle" (click)="startEditTitle(task)">{{task.title}}</div>
+            <div class="title" *ngIf="task.editTitle">
+                <input type="text" [(ngModel)]="task.title" (blur)="finishEditTitle(task)" (keyup)="finishKeyListener($event, task)" #editField/>
+            </div>
+            <div>
+                <div *ngIf="task.durationString" (click)="toggleDetails(task)">Duration: {{ task.durationString }}</div>
+            </div>
+            <div *ngIf="task.detailsOpen">
+                <div *ngFor="let interval of task.intervals" class="interval">
+                    <div>From: {{ interval.startTimeString }}</div>
+                    <div *ngIf="interval.endTimeString">To: {{ interval.endTimeString }}</div>
+                    <div>Duration: {{ interval.durationString }}</div>
+                </div>
+            </div>
+            <div *ngIf="task.intervals.indexOf(currentInterval) < 0">
+                <button (click)="extend(task)">Continue
+                    <app-icon type="play"></app-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

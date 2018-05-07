@@ -1,0 +1,12 @@
+<table>
+	<tbody>
+		<tr *ngFor="let row of cells">
+			<td *ngFor="let cell of row" style="border: solid 1px black;padding: 10px;">
+				{{cell.value ? cell.value : ''}}
+			</td>
+		</tr>
+	</tbody>
+</table>
+<button (click)="solve()">Solve</button>
+<textarea [(ngModel)]="input"></textarea>
+<button (click)="reload()">Reload</button>
