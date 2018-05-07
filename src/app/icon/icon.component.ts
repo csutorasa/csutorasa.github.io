@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class IconComponent implements OnInit {
 
-    protected value: string;
+    public value: string;
 
     @Input('type')
     public set type(type: string) {

@@ -27,11 +27,11 @@ export class TimerComponent implements OnInit {
 
     @ViewChildren('editField') protected editFields: QueryList<ElementRef>;
 
-    protected readonly tasks: Task[] = [];
-    protected searchText = '';
+    public readonly tasks: Task[] = [];
+    public searchText = '';
     protected currentTask: Task;
-    protected currentInterval: Interval;
-    protected totalDurationString: string;
+    public currentInterval: Interval;
+    public totalDurationString: string;
 
     constructor() {
         this.load();

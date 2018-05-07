@@ -20,8 +20,8 @@ interface Block {
 export class SudokuComponent implements OnInit {
     protected readonly size: number = 9;
 
-    protected input: string;
-    protected cells: Cell[][] = [];
+    public input: string;
+    public cells: Cell[][] = [];
     protected blocks: Block[] = [];
 
     constructor() {

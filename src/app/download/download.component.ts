@@ -33,13 +33,13 @@ interface RepositoryData {
 })
 export class DownloadComponent implements OnInit {
 
-    private searchForm: {
+    public searchForm: {
         username?: string;
     } = {};
-    private notfound = false;
-    private repository: string;
-    private readonly repositories: RepositoryData[] = [];
-    protected downloadData: RepositoryData;
+    public notfound = false;
+    public repository: string;
+    public readonly repositories: RepositoryData[] = [];
+    public downloadData: RepositoryData;
 
     constructor(@Inject(HttpClient) protected httpClient: HttpClient) { }
 
