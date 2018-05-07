@@ -1,7 +1,7 @@
 <form class="searchform">
     Username:
-    <input [(ngModel)]="searchForm.username" name="username" type="text" />
-    <input (click)="discover()" type="submit" value="Discover" [disabled]="!searchForm.username" />
+    <input [(ngModel)]="searchForm.username" (ngModelChange)="reset()" name="username" type="text" />
+    <button (click)="discover()" [disabled]="!searchForm.username">Discover</button>
 </form>
 <div class="repositories">
     <div *ngFor="let repo of repositories" (click)="setRepositoryName(repo.name)" class="repository" [ngClass]="{selected: repo.name === repository}">
@@ -18,15 +18,14 @@
     <h2>Total downloads: {{downloadData.download}}</h2>
     <div *ngFor="let release of downloadData.releases" class="release" [id]="release.id">
         <h1>
-            <a [href]="release.url">{{release.name}}</a> - {{release.publishDate}}</h1>
-        LifeTime: {{ release.lifetime }} days
-        <br> Average downloads: {{ release.downloadRate }} downloads/days
+            <a [href]="release.url">{{release.name}}</a> - {{release.publishDate.toISOString().substring(0, 16).replace('T', ' ') }}</h1>
         <div>
-            <span *ngFor="let line of release.body">{{line}}
+            <span *ngFor="let line of release.body">
+                {{line}}
                 <br>
             </span>
         </div>
-        <h2>Assets (total {{release.download}} downloads):</h2>
+        <h3>Downloaded {{release.download}} times over {{ release.lifetime }} days Average: {{ release.downloadRate }} downloads/day</h3>
         <ul>
             <li *ngFor="let asset of release.assets">
                 <a [href]="asset.url">{{asset.file}}</a> downloaded {{asset.download}} times

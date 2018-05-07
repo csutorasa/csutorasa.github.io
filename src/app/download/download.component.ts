@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 interface AssetData {
     file: string;
@@ -41,26 +43,49 @@ export class DownloadComponent implements OnInit {
     public readonly repositories: RepositoryData[] = [];
     public downloadData: RepositoryData;
 
-    constructor(@Inject(HttpClient) protected httpClient: HttpClient) { }
+    constructor(protected httpClient: HttpClient, private router: Router, private route: ActivatedRoute, private location: Location) {
+        this.route.params.subscribe(params => {
+            if (params['user']) {
+                this.searchForm.username = params['user'];
+                const discover = this.discover();
+                const repo = params['repo'];
+                if (repo) {
+                    discover.then(() => {
+                        if (this.repositories.map(r => r.name).indexOf(repo) >= 0) {
+                            this.setRepositoryName(repo);
+                        }
+                    });
+                }
+            }
+        });
+    }
 
     ngOnInit() {
     }
 
-    public setRepositoryName(repoName: string): void {
+    public reset(): void {
+        this.repositories.length = 0;
+        this.downloadData = undefined;
+        this.location.go('/download');
+    }
+
+    public setRepositoryName(repoName: string): Promise<void> {
         this.repository = repoName;
-        this.getDownloadData(this.searchForm.username, this.repositories.find(r => r.name === repoName)).then(data => {
+        return this.getDownloadData(this.searchForm.username, this.repositories.find(r => r.name === repoName)).then(data => {
             this.downloadData = data;
+            this.location.go('/download/' + this.searchForm.username + '/' + repoName);
         });
     }
 
-    public discover(): void {
+    public discover(): Promise<void> {
         if (!this.searchForm.username) {
-            return;
+            return Promise.resolve();
         }
-        this.getRepositoryNames(this.searchForm.username).then((repos: RepositoryData[]) => {
+        return this.getRepositoryNames(this.searchForm.username).then((repos: RepositoryData[]) => {
             this.repositories.length = 0;
             this.notfound = false;
             this.repositories.push(...repos.sort((a, b) => a.name.localeCompare(b.name)));
+            this.location.go('/download/' + this.searchForm.username);
         }, err => {
             this.repositories.length = 0;
             this.downloadData = undefined;

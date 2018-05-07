@@ -4,14 +4,14 @@
         padding: 0.3rem;
         border-radius: 0.3rem;
         outline: 0;
-        border: solid #aaa 1px;
+        border: 1px solid #aaa;
     }
-    input[type="submit"] {
+    button {
         margin: 0 0.5rem;
         padding: 0.3rem;
         border-radius: 0.3rem;
         outline: 0;
-        border: solid #aaa 1px;
+        border: 1px solid #aaa;
         color: #fff;
         background-color: #66f;
         transition: all 500ms;
@@ -55,10 +55,14 @@ a:-webkit-any-link {
     right: 0;
     top: 0;
     bottom: 0;
-    padding: 0.3 2rem;
-    background-color: #bbf;
+    padding: 0.3rem 1rem;
+    background-color: #bff;
     overflow: auto;
-    width: 10rem;
+    width: 12rem;
+    &>div {
+        padding: 0.3rem 1rem;
+        border-bottom: 1px solid #99f;
+    }
 }
 
 .repositories {

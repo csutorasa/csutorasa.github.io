@@ -14,6 +14,14 @@ const routes: Routes = [{
     component: DownloadComponent
 },
 {
+    path: 'download/:user',
+    component: DownloadComponent
+},
+{
+    path: 'download/:user/:repo',
+    component: DownloadComponent
+},
+{
     path: 'timer',
     component: TimerComponent
 },
