@@ -25,7 +25,7 @@ export class SudokuComponent implements OnInit {
     public cells: Cell[][] = [];
     protected blocks: Block[] = [];
 
-    protected reset = `0 0 0 0 0 0 0 0 0
+    public readonly reset = `0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0
@@ -35,7 +35,7 @@ export class SudokuComponent implements OnInit {
 0 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0 0`;
 
-    protected easy1 = `0 0 0 2 6 0 7 0 1
+    public readonly easy1 = `0 0 0 2 6 0 7 0 1
 6 8 0 0 7 0 0 9 0
 1 9 0 0 0 4 5 0 0
 8 2 0 1 0 0 0 4 0
@@ -45,7 +45,7 @@ export class SudokuComponent implements OnInit {
 0 4 0 0 5 0 0 3 6
 7 0 3 0 1 8 0 0 0`;
 
-    protected easy2 = `1 0 0 4 8 9 0 0 6
+    public readonly easy2 = `1 0 0 4 8 9 0 0 6
 7 3 0 0 0 0 0 4 0
 0 0 0 0 0 1 2 9 5
 0 0 7 1 2 0 6 0 0
@@ -55,7 +55,7 @@ export class SudokuComponent implements OnInit {
 0 2 0 0 0 0 0 3 7
 8 0 0 5 1 2 0 0 4`;
 
-    protected intermediate = `0 2 0 6 0 8 0 0 0
+    public readonly intermediate = `0 2 0 6 0 8 0 0 0
 5 8 0 0 0 9 7 0 0
 0 0 0 0 4 0 0 0 0
 3 7 0 0 0 0 5 0 0
@@ -65,7 +65,7 @@ export class SudokuComponent implements OnInit {
 0 0 9 8 0 0 0 3 6
 0 0 0 3 0 6 0 9 0`;
 
-    protected hard = `0 0 0 6 0 0 4 0 0
+    public readonly hard = `0 0 0 6 0 0 4 0 0
 7 0 0 0 0 3 6 0 0
 0 0 0 0 9 1 0 8 0
 0 0 0 0 0 0 0 0 0
