@@ -1,12 +1,21 @@
 <table>
 	<tbody>
 		<tr *ngFor="let row of cells">
-			<td *ngFor="let cell of row" style="border: solid 1px black;padding: 10px;">
+			<td *ngFor="let cell of row" class="cell" [title]="setToString(cell.possibleValues)">
 				{{cell.value ? cell.value : ''}}
 			</td>
 		</tr>
 	</tbody>
 </table>
 <button (click)="solve()">Solve</button>
-<textarea [(ngModel)]="input"></textarea>
+<div>
+	<button (click)="input = reset; reload()">Reset</button>
+	<button (click)="input = easy1; reload()">Easy 1</button>
+	<button (click)="input = easy2; reload()">Easy 2</button>
+	<button (click)="input = intermediate; reload()">Intermediate</button>
+	<button (click)="input = hard; reload()">Hard</button>
+</div>
+<div>
+<textarea [(ngModel)]="input" class="inputarea"></textarea>
 <button (click)="reload()">Reload</button>
+</div>
