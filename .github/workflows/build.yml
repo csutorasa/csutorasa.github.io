@@ -77,7 +77,7 @@ jobs:
         working-directory: ${{ env.base_dir }}
         run: |
           dpkg-scanpackages --multiversion . > Packages
-          if git diff-index --quiet HEAD -- Release; then
+          if git diff-index --quiet HEAD -- Packages; then
             echo "Release file has not changed, skipping update"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else 
