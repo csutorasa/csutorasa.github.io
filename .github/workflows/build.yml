@@ -5,6 +5,7 @@ on:
 
 env:
   base-dir: 'ppa'
+  list-name: 'csutorasa'
 
 jobs:
   package:
@@ -50,7 +51,7 @@ jobs:
       - name: Create .list
         shell: bash
         working-directory: ${{ env.base-dir }}
-        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/csutorasa.gpg] https://csutorasa.github.io/${{ env.base-dir }} ./" > csutorasa.list
+        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{${{ env.list-name }}}}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base-dir }} ./" > "${{ env.list-name }}.list"
 
       - name: Commit and push
         shell: bash
@@ -61,3 +62,14 @@ jobs:
           git add .
           git commit -m "Update PPA"
           git push
+
+      - name: Summary
+        run: |
+          echo '# Add the PPA
+          
+          ```shell
+          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{${{ env.list-name }}}}.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/${{ env.list-name }}.list "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/${{ env.list-name }}.list"
+          sudo apt update
+          ```
+          ' >> $GITHUB_STEP_SUMMARY
