@@ -16,6 +16,9 @@ jobs:
       - name: Update PPA
         uses: csutorasa/ppa-pages@main
         with:
+          actor: ${{ github.actor }}
+          actor-id: ${{ github.actor_id }}
           base-dir: ppa
           list-name: csutorasa
           private-key: ${{ secrets.PRIVATE_KEY }}
+          repository-owner: ${{ github.repository_owner }}
