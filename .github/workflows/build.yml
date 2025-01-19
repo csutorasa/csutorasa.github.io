@@ -9,7 +9,7 @@ env:
 
 jobs:
   package:
-    name: Package
+    name: Update PPA
     runs-on: ubuntu-latest
     permissions:
       contents: write
