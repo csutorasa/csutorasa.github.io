@@ -68,11 +68,12 @@ jobs:
           fi
 
       - name: Summary
+        shell: bash
         run: |
           echo '# Add the PPA
           
           ```shell
-          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{${{ env.list-name }}}}.gpg >/dev/null
+          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{ env.list-name }}.gpg >/dev/null
           sudo curl -s --compressed -o /etc/apt/sources.list.d/${{ env.list-name }}.list "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/${{ env.list-name }}.list"
           sudo apt update
           ```
