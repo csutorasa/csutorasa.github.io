@@ -51,7 +51,7 @@ jobs:
       - name: Create .list
         shell: bash
         working-directory: ${{ env.base-dir }}
-        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{${{ env.list-name }}}}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base-dir }} ./" > "${{ env.list-name }}.list"
+        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{ env.list-name }}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base-dir }} ./" > "${{ env.list-name }}.list"
 
       - name: Commit and push
         shell: bash
