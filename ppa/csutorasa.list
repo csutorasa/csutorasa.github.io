@@ -1,0 +1,1 @@
+deb [signed-by=/etc/apt/trusted.gpg.d/csutorasa.gpg] https://csutorasa.github.io/ppa ./
