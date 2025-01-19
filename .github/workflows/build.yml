@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  base-dir: 'ppa'
-  list-name: 'csutorasa'
+  base_dir: 'ppa'
+  list_name: 'csutorasa'
 
 jobs:
   package:
@@ -27,35 +27,77 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
         run: |
           echo "$PRIVATE_KEY" | gpg --import
-      
-      - name: Create KEY.gpg
+          echo "Private key is imported"
+
+      - name: Check KEY.gpg
+        id: key-check
         shell: bash
-        working-directory: ${{ env.base-dir }}
-        run: gpg --armor --export > KEY.gpg
+        working-directory: ${{ env.base_dir }}
+        run: |
+          if [ -f KEY.gpg ]; then
+            echo "KEY.gpg found, skipping generation"
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          else 
+            echo "KEY.gpg is not found"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
       
-      - name: Create Pagackes
+      - name: Generate KEY.gpg
         shell: bash
-        working-directory: ${{ env.base-dir }}
+        working-directory: ${{ env.base_dir }}
+        if: ${{ steps.key-check.missing }}
+        run: |
+          gpg --armor --export > "KEY.gpg
+          echo "KEY.gpg is generated"
+
+      - name: Check .list
+        id: list-check
+        shell: bash
+        working-directory: ${{ env.base_dir }}
+        run: |
+          if [ -f "${{ env.list_name }}.list" ]; then
+            echo "${{ env.list_name }}.list found, skipping generation"
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          else 
+            echo "${{ env.list_name }}.list is not found"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create .list
+        shell: bash
+        working-directory: ${{ env.base_dir }}
+        if: ${{ steps.list-check.missing }}
+        run: |
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{ env.list_name }}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base_dir }} ./" > "${{ env.list_name }}.list"
+          echo "${{ env.list_name }}.list is generated"
+
+      - name: Generate Pagackes
+        id: generate-packages
+        shell: bash
+        working-directory: ${{ env.base_dir }}
         run: |
           dpkg-scanpackages --multiversion . > Packages
-          gzip -k -f Packages
+          if git diff-index --quiet HEAD -- Release; then
+            echo "Release file has not changed, skipping update"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else 
+            gzip -k -f Packages
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       
-      - name: Create Release
+      - name: Generate Release
         shell: bash
-        working-directory: ${{ env.base-dir }}
+        working-directory: ${{ env.base_dir }}
+        if: ${{ steps.generate-packages.changed }}
         run: |
           apt-ftparchive release . > Release
           gpg -abs -o - Release > Release.gpg
           gpg --clearsign -o - Release > InRelease
 
-      - name: Create .list
-        shell: bash
-        working-directory: ${{ env.base-dir }}
-        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{ env.list-name }}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base-dir }} ./" > "${{ env.list-name }}.list"
-
       - name: Commit and push
         shell: bash
-        working-directory: ${{ env.base-dir }}
+        working-directory: ${{ env.base_dir }}
+        if: ${{ steps.generate-packages.changed }}
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
@@ -73,8 +115,8 @@ jobs:
           echo '# Add the PPA
           
           ```shell
-          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{ env.list-name }}.gpg >/dev/null
-          sudo curl -s --compressed -o /etc/apt/sources.list.d/${{ env.list-name }}.list "https://${{ github.repository_owner }}.github.io/${{ env.base-dir }}/${{ env.list-name }}.list"
+          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base_dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{ env.list_name }}.gpg >/dev/null
+          sudo curl -s --compressed -o /etc/apt/sources.list.d/${{ env.list_name }}.list "https://${{ github.repository_owner }}.github.io/${{ env.base_dir }}/${{ env.list_name }}.list"
           sudo apt update
           ```
           ' >> $GITHUB_STEP_SUMMARY
