@@ -1,0 +1,61 @@
+name: Build PPA
+
+on:
+  workflow_dispatch:
+
+env:
+  base-dir: 'ppa'
+
+jobs:
+  package:
+    name: Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install GNUPG
+        shell: bash
+        run: "apt-get install gnupg"
+      
+      - name: Import gpg key
+        shell: bash
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          gpg --import - "$PRIVATE_KEY"
+      
+      - name: Create KEY.gpg
+        shell: bash
+        working-directory: ${{ env.base-dir }}
+        run: gpg --armor --export > KEY.gpg
+      
+      - name: Create Pagackes
+        shell: bash
+        working-directory: ${{ env.base-dir }}
+        run: |
+          dpkg-scanpackages --multiversion . > Packages
+          gzip -k -f Packages
+      
+      - name: Create Release
+        shell: bash
+        working-directory: ${{ env.base-dir }}
+        run: |
+          apt-ftparchive release . > Release
+          gpg -abs -o - Release > Release.gpg
+          gpg --clearsign -o - Release > InRelease
+
+      - name: Create .list
+        shell: bash
+        working-directory: ${{ env.base-dir }}
+        run: echo "deb [signed-by=/etc/apt/trusted.gpg.d/csutorasa.gpg] https://csutorasa.github.io/${{ env.base-dir }} ./" > csutorasa.list
+
+      - name: Commit and push
+        shell: bash
+        working-directory: ${{ env.base-dir }}
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
+          git add .
+          git commit -m "Update PPA"
+          git push
