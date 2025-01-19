@@ -3,10 +3,6 @@ name: Build PPA
 on:
   workflow_dispatch:
 
-env:
-  base_dir: 'ppa'
-  list_name: 'csutorasa'
-
 jobs:
   package:
     name: Update PPA
@@ -17,102 +13,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install GNUPG
-        shell: bash
-        run: "sudo apt-get install -y gnupg"
-      
-      - name: Import gpg key
-        shell: bash
-        env:
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-        run: |
-          echo "$PRIVATE_KEY" | gpg --import
-          echo "Private key is imported"
-
-      - name: Check KEY.gpg
-        id: key-check
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        run: |
-          if [ -f KEY.gpg ]; then
-            echo "KEY.gpg found, skipping generation"
-            echo "missing=false" >> "$GITHUB_OUTPUT"
-          else 
-            echo "KEY.gpg is not found"
-            echo "missing=true" >> "$GITHUB_OUTPUT"
-          fi
-      
-      - name: Generate KEY.gpg
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        if: steps.key-check.outputs.missing == 'true'
-        run: |
-          gpg --armor --export > "KEY.gpg
-          echo "KEY.gpg is generated"
-
-      - name: Check .list
-        id: list-check
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        run: |
-          if [ -f "${{ env.list_name }}.list" ]; then
-            echo "${{ env.list_name }}.list found, skipping generation"
-            echo "missing=false" >> "$GITHUB_OUTPUT"
-          else 
-            echo "${{ env.list_name }}.list is not found"
-            echo "missing=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Create .list
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        if: steps.list-check.outputs.missing == 'true'
-        run: |
-          echo "deb [signed-by=/etc/apt/trusted.gpg.d/${{ env.list_name }}.gpg] https://${{ github.repository_owner }}.github.io/${{ env.base_dir }} ./" > "${{ env.list_name }}.list"
-          echo "${{ env.list_name }}.list is generated"
-
-      - name: Generate Pagackes
-        id: generate-packages
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        run: |
-          dpkg-scanpackages --multiversion . > Packages
-          if git --no-pager diff --name-status | grep -q "Packages"; then
-            gzip -k -f Packages
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "Release file has not changed, skipping update"
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          fi
-      
-      - name: Generate Release
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        if: steps.generate-packages.outputs.changed == 'true'
-        run: |
-          apt-ftparchive release . > Release
-          gpg -abs -o - Release > Release.gpg
-          gpg --clearsign -o - Release > InRelease
-
-      - name: Commit and push
-        shell: bash
-        working-directory: ${{ env.base_dir }}
-        if: steps.key-check.outputs.missing == 'true' || steps.list-check.outputs.missing == 'true' || steps.generate-packages.outputs.changed == 'true'
-        run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "Update PPA"
-          git push
-
-      - name: Summary
-        shell: bash
-        run: |
-          echo '# Add the PPA
-          
-          ```shell
-          curl -s --compressed "https://${{ github.repository_owner }}.github.io/${{ env.base_dir }}/KEY.gpg" | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/${{ env.list_name }}.gpg >/dev/null
-          sudo curl -s --compressed -o /etc/apt/sources.list.d/${{ env.list_name }}.list "https://${{ github.repository_owner }}.github.io/${{ env.base_dir }}/${{ env.list_name }}.list"
-          sudo apt update
-          ```
-          ' >> $GITHUB_STEP_SUMMARY
+      - name: Update PPA
+        uses: csutorasa/ppa-pages@main
+        with:
+          base-dir: ppa
+          list-name: csutorasa
+          private-key: ${{ secrets.PRIVATE_KEY }}
