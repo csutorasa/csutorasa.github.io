@@ -77,12 +77,12 @@ jobs:
         working-directory: ${{ env.base_dir }}
         run: |
           dpkg-scanpackages --multiversion . > Packages
-          if git diff-index --quiet HEAD -- Packages; then
-            echo "Release file has not changed, skipping update"
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else 
+          if if git --no-pager diff --name-status | grep -q "Packages"; then
             gzip -k -f Packages
             echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Release file has not changed, skipping update"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
       
       - name: Generate Release
@@ -97,7 +97,7 @@ jobs:
       - name: Commit and push
         shell: bash
         working-directory: ${{ env.base_dir }}
-        if: steps.generate-packages.outputs.changed == 'true'
+        if: steps.key-check.outputs.missing == 'true' || steps.list-check.outputs.missing == 'true' || steps.generate-packages.outputs.changed == 'true'
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com"
