@@ -1,13 +1,13 @@
 Package: icon-metrics
 Source: icon-metrics
 Version: 1.2.1
-Architecture: amd64
+Architecture: arm64
 Maintainer: Ármin Csutorás <csutorasa@gmail.com>
-Filename: ./icon-metrics-amd64-1.2.1.deb
-Size: 3114014
-MD5sum: 029141175de9d3f54b9711b43cafc774
-SHA1: 03e0d58a70a8ac36d902b1ad3158c50fcbb3cbec
-SHA256: 70ea4df4b21f6ccf74534db2f7de44e63b2d091287c35c064e6ac134d799ed3a
+Filename: ./icon-metrics-arm64-1.2.2.deb
+Size: 2552616
+MD5sum: 1abfe0c9b5ccda627cb5804acfec59c3
+SHA1: f60a6590742895d2bd9e101f243fdd94b62993a7
+SHA256: a513f4d0f8b363bf4262ce9df7992c19d89728748ec12873d14c8d75f7ae7c0d
 Section: utils
 Priority: optional
 Description: icon-metrics
@@ -17,13 +17,13 @@ Build-Depends: dh-systemd (>=1.5)
 Package: icon-metrics
 Source: icon-metrics
 Version: 1.2.1
-Architecture: arm64
+Architecture: amd64
 Maintainer: Ármin Csutorás <csutorasa@gmail.com>
-Filename: ./icon-metrics-arm64-1.2.1.deb
-Size: 2769134
-MD5sum: 6624cc2b34269d7f8fcef68b94858fe1
-SHA1: dbee5f37083ea1a8ef16793d0230cb541a97c748
-SHA256: 4071265ac123c2911b545a038bb7cc55596348ecb6581885c27c0c3828360970
+Filename: ./icon-metrics-amd64-1.2.1.deb
+Size: 3114014
+MD5sum: 029141175de9d3f54b9711b43cafc774
+SHA1: 03e0d58a70a8ac36d902b1ad3158c50fcbb3cbec
+SHA256: 70ea4df4b21f6ccf74534db2f7de44e63b2d091287c35c064e6ac134d799ed3a
 Section: utils
 Priority: optional
 Description: icon-metrics
@@ -51,27 +51,11 @@ Source: icon-metrics
 Version: 1.2.1
 Architecture: arm64
 Maintainer: Ármin Csutorás <csutorasa@gmail.com>
-Filename: ./icon-metrics-arm64-1.2.2.deb
-Size: 2552616
-MD5sum: 1abfe0c9b5ccda627cb5804acfec59c3
-SHA1: f60a6590742895d2bd9e101f243fdd94b62993a7
-SHA256: a513f4d0f8b363bf4262ce9df7992c19d89728748ec12873d14c8d75f7ae7c0d
-Section: utils
-Priority: optional
-Description: icon-metrics
-    NGBS iCON smart home control system metrics reader
-Build-Depends: dh-systemd (>=1.5)
-
-Package: icon-metrics
-Source: icon-metrics
-Version: 1.3.0
-Architecture: arm64
-Maintainer: Ármin Csutorás <csutorasa@gmail.com>
-Filename: ./icon-metrics-arm64-1.3.0.deb
-Size: 2564378
-MD5sum: ac8c8bbd2cd60e9bd5e0c62727eb1ff5
-SHA1: 4b538ed5428cc6e90e1ba3c3f3df8cbd33003d45
-SHA256: d1c406a132c9db8601d89dc8b3cbdc8e3b1f9c810fe851820d181686ffbf3574
+Filename: ./icon-metrics-arm64-1.2.1.deb
+Size: 2769134
+MD5sum: 6624cc2b34269d7f8fcef68b94858fe1
+SHA1: dbee5f37083ea1a8ef16793d0230cb541a97c748
+SHA256: 4071265ac123c2911b545a038bb7cc55596348ecb6581885c27c0c3828360970
 Section: utils
 Priority: optional
 Description: icon-metrics
@@ -88,6 +72,22 @@ Size: 2864064
 MD5sum: 0f03b259036786233ccd243ddff8d534
 SHA1: 74691bb3ebdcffd976eb5becc06935ae5c398161
 SHA256: c9f5aa8e51451fbc1aa43b4e3210cd3867da9c1738be5e926145a9936ec6dd36
+Section: utils
+Priority: optional
+Description: icon-metrics
+    NGBS iCON smart home control system metrics reader
+Build-Depends: dh-systemd (>=1.5)
+
+Package: icon-metrics
+Source: icon-metrics
+Version: 1.3.0
+Architecture: arm64
+Maintainer: Ármin Csutorás <csutorasa@gmail.com>
+Filename: ./icon-metrics-arm64-1.3.0.deb
+Size: 2564378
+MD5sum: ac8c8bbd2cd60e9bd5e0c62727eb1ff5
+SHA1: 4b538ed5428cc6e90e1ba3c3f3df8cbd33003d45
+SHA256: d1c406a132c9db8601d89dc8b3cbdc8e3b1f9c810fe851820d181686ffbf3574
 Section: utils
 Priority: optional
 Description: icon-metrics
@@ -129,6 +129,22 @@ Build-Depends: dh-systemd (>=1.5)
 Package: icon-metrics
 Source: icon-metrics
 Version: 1.3.2
+Architecture: amd64
+Maintainer: Ármin Csutorás <csutorasa@gmail.com>
+Filename: ./icon-metrics-amd64-1.3.2.deb
+Size: 3126430
+MD5sum: ab0f9086f7df75d30da41740c47a3150
+SHA1: 22c0ed3c799583ba04c1a6d5c7b7a3e87e4a22d4
+SHA256: 61bd02b4d3a02dbb94c95731c3473a2f17a81c49b63289afa5ee5b6cec0fbaa6
+Section: utils
+Priority: optional
+Description: icon-metrics
+    NGBS iCON smart home control system metrics reader
+Build-Depends: dh-systemd (>=1.5)
+
+Package: icon-metrics
+Source: icon-metrics
+Version: 1.3.2
 Architecture: arm64
 Maintainer: Ármin Csutorás <csutorasa@gmail.com>
 Filename: ./icon-metrics-arm64-1.3.2.deb
@@ -144,14 +160,62 @@ Build-Depends: dh-systemd (>=1.5)
 
 Package: icon-metrics
 Source: icon-metrics
-Version: 1.3.2
+Version: 1.3.3
+Architecture: arm64
+Maintainer: Ármin Csutorás <csutorasa@gmail.com>
+Filename: ./icon-metrics-arm64-1.3.3.deb
+Size: 2800162
+MD5sum: 734146c99ffe415cf136ffeadec0d65f
+SHA1: 7260abaadea8c8c36aa73f1023f694e246fae7e5
+SHA256: 6ab5f79a41627ae34a9ffb4939ac2df0cf928051781e76a4d87eef6dfda60621
+Section: utils
+Priority: optional
+Description: icon-metrics
+    NGBS iCON smart home control system metrics reader
+Build-Depends: dh-systemd (>=1.5)
+
+Package: icon-metrics
+Source: icon-metrics
+Version: 1.3.3
 Architecture: amd64
 Maintainer: Ármin Csutorás <csutorasa@gmail.com>
-Filename: ./icon-metrics-amd64-1.3.2.deb
-Size: 3126430
-MD5sum: ab0f9086f7df75d30da41740c47a3150
-SHA1: 22c0ed3c799583ba04c1a6d5c7b7a3e87e4a22d4
-SHA256: 61bd02b4d3a02dbb94c95731c3473a2f17a81c49b63289afa5ee5b6cec0fbaa6
+Filename: ./icon-metrics-amd64-1.3.3.deb
+Size: 3142582
+MD5sum: ff9b72767f94e0215c3c8276c95b093a
+SHA1: ef7045a8999e65727f2d6385d1893614226566e1
+SHA256: d1503e57b3b7fae45fb45b792754da2b77b44039a484853a33c2453c7c200b2e
+Section: utils
+Priority: optional
+Description: icon-metrics
+    NGBS iCON smart home control system metrics reader
+Build-Depends: dh-systemd (>=1.5)
+
+Package: icon-metrics
+Source: icon-metrics
+Version: 1.3.4
+Architecture: arm64
+Maintainer: Ármin Csutorás <csutorasa@gmail.com>
+Filename: ./icon-metrics-arm64-1.3.4.deb
+Size: 2819210
+MD5sum: 51841ef2f50c22a74926a8622a15d010
+SHA1: e9dc9d5ed6814ce5e4d27bfd0af940fb15386321
+SHA256: 5e1d9c104d9b18b74e1275238ed6a9a95091a719117f024c1a847c1a0fbd25bb
+Section: utils
+Priority: optional
+Description: icon-metrics
+    NGBS iCON smart home control system metrics reader
+Build-Depends: dh-systemd (>=1.5)
+
+Package: icon-metrics
+Source: icon-metrics
+Version: 1.3.4
+Architecture: amd64
+Maintainer: Ármin Csutorás <csutorasa@gmail.com>
+Filename: ./icon-metrics-amd64-1.3.4.deb
+Size: 3183530
+MD5sum: ef3a8b379ac1ba87020caa118043e478
+SHA1: 5dae4b53748d9fe0597050c46d7ecb5fb2fb3b72
+SHA256: c66c0f3b8c0c289b650922a9ec9217310632869ade3518d4f9869210fc8288ec
 Section: utils
 Priority: optional
 Description: icon-metrics
